@@ -4,7 +4,7 @@ import AddEmployee from './AddEmployee.jsx';
 import EditEmployee from './EditEmployee.jsx';
 import { v4 as uuidv4 } from 'uuid';
 function Connection(props) {
-    const [Id, setId] = useState("");
+    const [Id, setId] = useState(uuidv4());
     const [education, seteducation] = useState("");
     const [age, setage] = useState("");
     const [gender, setgender] = useState("");
@@ -15,7 +15,7 @@ function Connection(props) {
     const [experienceInCurrentDomain, setexperienceInCurrentDomain] = useState("");
     const [leaveOrNot, setleaveOrNot] = useState("");
     const [employees, setEmployees] = useState([]);
-
+  
 
     useEffect(() => {
         loadEmployees();
@@ -23,7 +23,7 @@ function Connection(props) {
 
     async function loadEmployees() {
         try {
-            const response = await axios.get("http://localhost:8081/emp/getAllUser");
+            const response = await axios.get("http://localhost:8081/api/emp/getAllUser");
             console.log(response.data); // Check the structure of the data here
             if (Array.isArray(response.data)) {
                 setEmployees(response.data);
@@ -35,43 +35,30 @@ function Connection(props) {
         }
     }
 
-    async function handleSubmit(event) {
-        event.preventDefault();
-        try {
-            if (Id) {
-                await axios.put(`http://localhost:8081/emp/update/${Id}`, {
-                    education,
-                    joiningyear,
-                    city,
-                    paymentTier,
-                    age,
-                    gender,
-                    everBenched,
-                    experienceInCurrentDomain,
-                    leaveOrNot,
-                });
-                alert("Employee Updated Successfully");
-            } else {
-                await axios.post("http://localhost:8081/emp/Rules", {
-                    education,
-                    joiningyear,
-                    city,
-                    paymentTier,
-                    age,
-                    gender,
-                    everBenched,
-                    experienceInCurrentDomain,
-                    leaveOrNot,
-                });
-                alert("Employee Registered Successfully");
-            }
-            resetForm();
-            loadEmployees();
-        } catch (error) {
-            console.error("Employee Registration/Update Failed", error);
-            alert("Employee Registration/Update Failed");
-        }
-    }
+
+ async function handleSubmitpost(event) {
+                event.preventDefault(); 
+                try{        
+                    await axios.post("http://localhost:8081/api/emp/post", {
+                        education,
+                        joiningyear,
+                        city,
+                        paymentTier,
+                        age,
+                        gender,
+                        everBenched,
+                        experienceInCurrentDomain,
+                        leaveOrNot,
+                    });
+                    alert("Employee Registered Successfully");
+                
+                    resetForm();
+                    loadEmployees();
+               } catch (error) {
+                console.error("Employee Registration Failed", error);
+                alert("Employee Registration Failed");
+               }
+      }
 
     function resetForm() {
         setId("");
@@ -88,7 +75,7 @@ function Connection(props) {
 
     const showEmployees = true;
     
-    function newEmployee(education, joiningyear, city, paymentTier, age, gender, everBanched, experienceInCurrentDomain, LeaveOrNot)
+    function newEmployee(education, joiningyear, city, paymentTier, age, gender, everBenched, experienceInCurrentDomain, LeaveOrNot)
     {
         const newEmployee = { 
             id: uuidv4(),
@@ -98,7 +85,7 @@ function Connection(props) {
             paymentTier : paymentTier,
             age : age,
             gender : gender,
-            everBanched : everBanched,
+            everBenched : everBenched,
             experienceInCurrentDomain: experienceInCurrentDomain,
             leaveOrNot : LeaveOrNot,
         };
@@ -134,6 +121,7 @@ function Connection(props) {
                     <table className="table table-white" align="center">
                         <thead>
                             <tr>
+                                <th>Id</th>
                                 <th>Education</th>
                                 <th>Join Year</th>
                                 <th>City</th>
@@ -153,7 +141,8 @@ function Connection(props) {
                                 </tr>
                             ) : (
                                 employees.map((employee) => (
-                                    <tr key={employee.id}>
+                                    <tr key={employee.Id}>
+                                        <td>{Id}</td>
                                         <td>{employee.education}</td>
                                         <td>{employee.joiningyear}</td>
                                         <td>{employee.city}</td>
