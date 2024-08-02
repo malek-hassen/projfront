@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Connection from './Connection';
-import {handleSubmit} from './Connection';
 function AddEmployee(props) {
     const [Id, setId] = useState("");
     const [education, seteducation] = useState("");
@@ -213,9 +212,9 @@ function AddEmployee(props) {
                                     <div className="md:w-1/3">
                                         <label
                                             className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                                            for="everBanched"
+                                            for="everBenched"
                                         >
-                                            everBanched
+                                            everBenched
                                         </label>
                                     </div>
                                     <div className="md:w-2/3">
@@ -299,8 +298,7 @@ function AddEmployee(props) {
                             </button>
                             <button
                                 className="btn btn-primary mt-4"
-                                onClick={handleClose}
-                                
+                                onClick={Connection.handleSubmitpost}
                                 
                                 form="editmodal"
                             >
