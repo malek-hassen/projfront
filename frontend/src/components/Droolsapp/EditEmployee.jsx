@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
+import  Connection from './Connection';
+
 function EditEmployee(props) {
     const [Id, setId] = useState("");
     const [education, seteducation] = useState("");
@@ -16,6 +19,30 @@ function EditEmployee(props) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    async function handleSubmitput(event) {
+        event.preventDefault();
+        try {
+           
+                await axios.put(`http://localhost:8081/api/emp/update`+ Id, {
+                    education,
+                    joiningyear,
+                    city,
+                    paymentTier,
+                    age,
+                    gender,
+                    everBenched,
+                    experienceInCurrentDomain,
+                    leaveOrNot,
+                });
+                  alert("Employee Updated Successfully");
+                  Connection.resetForm();
+                  Connection.loadEmployees();
+            } catch (error) {
+                console.error("Employee Update Failed", error);
+                alert("Employee Update Failed");
+        }
+     } 
     return ( 
         <>
                          <button
@@ -68,7 +95,7 @@ function EditEmployee(props) {
                                                     disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
                                                     invalid:border-pink-500 invalid:text-pink-600
                                                     focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
-                                            id="name"
+                                            id="education"
                                             placeholder="education"
                                             type="text"
                                             value={education}
@@ -95,7 +122,7 @@ function EditEmployee(props) {
                                             invalid:border-pink-500 invalid:text-pink-600
                                             focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                                             id="role"
-                                            placeholder="jjoiningyear"
+                                            placeholder="joiningyear"
                                             type="text"
                                             value={joiningyear}
                                             onChange={(e) => {
@@ -212,9 +239,9 @@ function EditEmployee(props) {
                                     <div className="md:w-1/3">
                                         <label
                                             className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                                            for="everBanched"
+                                            for="everBenched"
                                         >
-                                            everBanched
+                                            everBenched
                                         </label>
                                     </div>
                                     <div className="md:w-2/3">
@@ -279,7 +306,8 @@ function EditEmployee(props) {
                                             id="role"
                                             placeholder="leave"
                                             type="text"
-                                            value={leaveOrNot}
+                                            defaultValue={employees.leaveOrNot}
+                                            value={employees.leaveOrNot}
                                             onChange={(e) => {
                                                 setleaveOrNot(e.target.value);
                                             }}
@@ -298,7 +326,7 @@ function EditEmployee(props) {
                             </button>
                             <button
                                 className="btn btn-primary mt-4"
-                                onClick={handleClose}
+                                onClick={handleSubmitput}
                                 form="editmodal"
                             >
                                update
